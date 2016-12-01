@@ -1,11 +1,15 @@
 package service;
 
+import java.awt.List;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import pro2_flappy.game.GameBoard;
 import pro2_flappy.game.Tile;
@@ -24,10 +28,20 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
 			String[] line = br.readLine().split(";");
 			int typeCount = Integer.parseInt(line[0]);
-
-			// preskocime radky definice dlazdic
+			
+			Map<String,Tile> tileTipes = new HashMap<>();
+			// radky definice dlazdic
 			for (int i = 0; i < typeCount; i++) {
-				br.readLine();
+				line = br.readLine().split(";");
+				String tileTipe = line[0];
+				String clazz = line[1];
+				int x = Integer.parseInt(line[2]);
+				int y = Integer.parseInt(line[3]);
+				int z = Integer.parseInt(line[4]);
+				int w = Integer.parseInt(line[5]);
+				String url = line[6];
+				Tile tile = createTile(clazz,x,y,z,w,url);
+				tileTipes.put(tileTipe, tile);
 			}
 			line = br.readLine().split(";");
 			int rows = Integer.parseInt(line[0]);
@@ -46,9 +60,8 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 						// bunka v csv chybi povazujeme ji za prazdnou
 						cell = "";
 					}
-					if (!"".equals(cell)) {
-						tiles[i][j] = new WallTile();
-					}
+					//odpovidajici typ dlazdice hasMapy
+						tiles[i][j] = tileTipes.get(cell);
 				}
 			}
 			GameBoard gb = new GameBoard(tiles);
@@ -56,6 +69,11 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 		} catch (IOException e) {
 			throw new RuntimeException("Chyba pri cteni souboru", e);
 		}
+	}
+
+	private Tile createTile(String clazz, int x, int y, int z, int w, String url) {
+		
+		return null;
 	}
 
 }

@@ -37,7 +37,7 @@ public class MainWindow extends JFrame {
 	}
 
 	public MainWindow() {
-		try(InputStream is = new FileInputStream("mujlevel.csv")){
+		try(InputStream is = new FileInputStream("level.csv")){
 		CsvGameBoardLoader loader = new CsvGameBoardLoader(is);
 		gameBoard =loader.loadLevel();
 		} catch (FileNotFoundException e1) {
