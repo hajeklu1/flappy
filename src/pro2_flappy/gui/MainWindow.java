@@ -32,7 +32,7 @@ public class MainWindow extends JFrame {
 		public void paint(Graphics g) {
 			super.paint(g);
 
-			gameBoard.draw(g);
+			gameBoard.drawAndTestCollisions(g);
 		}
 	}
 
@@ -81,7 +81,7 @@ public class MainWindow extends JFrame {
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
 			MainWindow mainWindow = new MainWindow();
-
+			mainWindow.setSize(1000, 240);
 			mainWindow.setVisible(true);
 
 		});

@@ -20,6 +20,8 @@ import javax.management.RuntimeErrorException;
 
 import pro2_flappy.game.GameBoard;
 import pro2_flappy.game.Tile;
+import pro2_flappy.game.tiles.BonusTile;
+import pro2_flappy.game.tiles.EmptyTile;
 import pro2_flappy.game.tiles.WallTile;
 
 public class CsvGameBoardLoader implements GameBoardLoader {
@@ -82,26 +84,32 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 		// stahnout obrazek z URL a ulozit do promene
 		try {
 			BufferedImage original = ImageIO.read(new URL(url));
-			//vyrizneme sprite z obrazku 
-			
+			// vyrizneme sprite z obrazku
+
 			BufferedImage cropedImg = original.getSubimage(x, y, w, h);
-			//zvetsime dlazdice
-			
-			BufferedImage resizeImage = new BufferedImage(Tile.SIZE, Tile.SIZE, BufferedImage.TYPE_INT_ARGB);;
+			// zvetsime dlazdice
+
+			BufferedImage resizeImage = new BufferedImage(Tile.SIZE, Tile.SIZE, BufferedImage.TYPE_INT_ARGB);
+			;
 			Graphics2D g = resizeImage.createGraphics();
 			g.drawImage(cropedImg, 0, 0, Tile.SIZE, Tile.SIZE, null);
-			//vytvorime odpovidajici typ dlazdice
+			// vytvorime odpovidajici typ dlazdice
 			switch (clazz) {
-			default:
+			case "Wall":
 				return new WallTile(resizeImage);
+			case "Empty":
+				return new EmptyTile(resizeImage);
+			case "Bonus":
+				return new BonusTile(resizeImage);
 			}
-			
+			//ani jedna vetev switch case nefungovala
+			throw new RuntimeException("Neznami tip dlazdice" + clazz);
+
 		} catch (MalformedURLException e) {
 			throw new RuntimeException("Spatna url" + clazz + ": " + url, e);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		return null;
 	}
 
