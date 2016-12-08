@@ -1,15 +1,22 @@
 package service;
 
+import java.awt.Graphics2D;
 import java.awt.List;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.imageio.ImageIO;
+import javax.management.RuntimeErrorException;
 
 import pro2_flappy.game.GameBoard;
 import pro2_flappy.game.Tile;
@@ -28,8 +35,8 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
 			String[] line = br.readLine().split(";");
 			int typeCount = Integer.parseInt(line[0]);
-			
-			Map<String,Tile> tileTipes = new HashMap<>();
+
+			Map<String, Tile> tileTipes = new HashMap<>();
 			// radky definice dlazdic
 			for (int i = 0; i < typeCount; i++) {
 				line = br.readLine().split(";");
@@ -40,7 +47,7 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 				int z = Integer.parseInt(line[4]);
 				int w = Integer.parseInt(line[5]);
 				String url = line[6];
-				Tile tile = createTile(clazz,x,y,z,w,url);
+				Tile tile = createTile(clazz, x, y, z, w, url);
 				tileTipes.put(tileTipe, tile);
 			}
 			line = br.readLine().split(";");
@@ -60,8 +67,8 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 						// bunka v csv chybi povazujeme ji za prazdnou
 						cell = "";
 					}
-					//odpovidajici typ dlazdice hasMapy
-						tiles[i][j] = tileTipes.get(cell);
+					// odpovidajici typ dlazdice hasMapy
+					tiles[i][j] = tileTipes.get(cell);
 				}
 			}
 			GameBoard gb = new GameBoard(tiles);
@@ -71,8 +78,30 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 		}
 	}
 
-	private Tile createTile(String clazz, int x, int y, int z, int w, String url) {
-		
+	private Tile createTile(String clazz, int x, int y, int w, int h, String url) {
+		// stahnout obrazek z URL a ulozit do promene
+		try {
+			BufferedImage original = ImageIO.read(new URL(url));
+			//vyrizneme sprite z obrazku 
+			
+			BufferedImage cropedImg = original.getSubimage(x, y, w, h);
+			//zvetsime dlazdice
+			
+			BufferedImage resizeImage = new BufferedImage(Tile.SIZE, Tile.SIZE, BufferedImage.TYPE_INT_ARGB);;
+			Graphics2D g = resizeImage.createGraphics();
+			g.drawImage(cropedImg, 0, 0, Tile.SIZE, Tile.SIZE, null);
+			//vytvorime odpovidajici typ dlazdice
+			switch (clazz) {
+			default:
+				return new WallTile(resizeImage);
+			}
+			
+		} catch (MalformedURLException e) {
+			throw new RuntimeException("Spatna url" + clazz + ": " + url, e);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		return null;
 	}
 
