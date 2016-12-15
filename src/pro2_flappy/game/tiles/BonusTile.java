@@ -3,11 +3,15 @@ package pro2_flappy.game.tiles;
 import java.awt.Graphics;
 import java.awt.Image;
 
-public class BonusTile extends AbstractTile {
-	boolean isActive = true;
+import pro2_flappy.game.Tile;
 
-	public BonusTile(Image image) {
+public class BonusTile extends AbstractTile {
+	private boolean isActive = true;
+	private Tile empty;
+
+	public BonusTile(Image image, Tile tile) {
 		super(image);
+		empty = tile;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -15,9 +19,12 @@ public class BonusTile extends AbstractTile {
 	public void draw(Graphics g, int x, int y) {
 		if (isActive) {
 			super.draw(g, x, y);
+		} else {
+			empty.draw(g, x, y);
 		}
 	}
-	public void setIsActive(boolean value){
+
+	public void setIsActive(boolean value) {
 		isActive = value;
 	}
 }

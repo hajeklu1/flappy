@@ -50,10 +50,17 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 				int z = Integer.parseInt(line[4]);
 				int w = Integer.parseInt(line[5]);
 				String url = line[6];
+				String referencedTiteTipe = (line.length >= 8) ? line[7] : ""; // nepovinny
+																				// odkaz,
+																				// pouzivame
+																				// u
+				// bonusu
+				
+				Tile referenceTile = tileTipes.get(referencedTiteTipe);
 				if (clazz.equals("Bird")) {
 					imgBird = loadImage(x, y, z, w, url);
 				} else {
-					Tile tile = createTile(clazz, x, y, z, w, url);
+					Tile tile = createTile(clazz, x, y, z, w, url,referenceTile);
 					tileTipes.put(tileTipe, tile);
 				}
 			}
@@ -78,14 +85,14 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 					tiles[i][j] = tileTipes.get(cell);
 				}
 			}
-			GameBoard gb = new GameBoard(tiles,imgBird);
+			GameBoard gb = new GameBoard(tiles, imgBird);
 			return gb;
 		} catch (IOException e) {
 			throw new RuntimeException("Chyba pri cteni souboru", e);
 		}
 	}
 
-	private Tile createTile(String clazz, int x, int y, int w, int h, String url) {
+	private Tile createTile(String clazz, int x, int y, int w, int h, String url, Tile referenceTile) {
 		// stahnout obrazek z URL a ulozit do promene
 		try {
 			BufferedImage resizeImage = loadImage(x, y, w, h, url);
@@ -96,7 +103,7 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 			case "Empty":
 				return new EmptyTile(resizeImage);
 			case "Bonus":
-				return new BonusTile(resizeImage);
+				return new BonusTile(resizeImage, referenceTile);
 			}
 			// ani jedna vetev switch case nefungovala
 			throw new RuntimeException("Neznami tip dlazdice" + clazz);
