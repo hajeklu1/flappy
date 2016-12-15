@@ -1,6 +1,7 @@
 package pro2_flappy.game;
 
 import java.awt.Graphics;
+import java.awt.Image;
 
 import javax.security.auth.callback.TextInputCallback;
 
@@ -15,15 +16,9 @@ public class GameBoard implements TickAware {
 	Bird bird;
 	Boolean gameOver = false;
 
-	public GameBoard() {
-
-		bird = new Bird(viewportWidth / 2, tiles.length * Tile.SIZE / 2);
-
-	}
-
-	public GameBoard(Tile[][] tiles) {
+	public GameBoard(Tile[][] tiles, Image imgBird) {
 		this.tiles = tiles;
-		bird = new Bird(viewportWidth / 2, tiles.length * Tile.SIZE / 2);
+		bird = new Bird(viewportWidth / 2, tiles.length * Tile.SIZE / 2,imgBird);
 	}
 
 	public int getHeightPix() {
@@ -44,7 +39,6 @@ public class GameBoard implements TickAware {
 
 		int minJ = shiftX / Tile.SIZE; // index prvního viditelného sloupce
 		int maxJ = minJ + viewportWidth / Tile.SIZE + 2; // zajištìní zobrazení
-															// všech vpravo
 
 		for (int i = 0; i < tiles.length; i++) {
 			for (int j = minJ; j < maxJ + 60; j++) {
@@ -71,7 +65,7 @@ public class GameBoard implements TickAware {
 						gameOver = true;
 					}
 				}
-				if(t instanceof BonusTile){
+				if (t instanceof BonusTile) {
 					if (bird.collidesWhitRectangle(screenX, screenY, Tile.SIZE, Tile.SIZE)) {
 						((BonusTile) t).setIsActive(false);
 					}
