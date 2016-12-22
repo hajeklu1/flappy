@@ -39,7 +39,7 @@ public class MainWindow extends JFrame {
 	}
 
 	public MainWindow() {
-		try (InputStream is = new FileInputStream("level.csv")) {
+	/*	try (InputStream is = new FileInputStream("level.csv")) {
 			CsvGameBoardLoader loader = new CsvGameBoardLoader(is);
 			gameBoard = loader.loadLevel();
 		} catch (FileNotFoundException e1) {
@@ -49,7 +49,10 @@ public class MainWindow extends JFrame {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
+*/
+		
+		LevelPicker picker = new LevelPicker();
+		gameBoard = picker.pickAndLoadLevel();
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		// gameBoard = new GameBoard();
