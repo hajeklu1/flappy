@@ -12,6 +12,7 @@ public class GameBoard implements TickAware {
 	int viewportWidth = 200; // TODO upravit
 	Bird bird;
 	Boolean gameOver = false;
+	public Boolean chean = true;
 
 	public GameBoard(Tile[][] tiles, Image imgBird) {
 		this.tiles = tiles;
@@ -36,7 +37,6 @@ public class GameBoard implements TickAware {
 
 		int minJ = shiftX / Tile.SIZE; // index prvního viditelného sloupce
 		int maxJ = minJ + viewportWidth / Tile.SIZE + 2; // zajištìní zobrazení
-		System.out.println(shiftX);
 		for (int i = 0; i < tiles.length; i++) {
 			for (int j = minJ; j < maxJ + 60; j++) {
 
@@ -58,8 +58,10 @@ public class GameBoard implements TickAware {
 				// otestujeme možnou kolizi s ptákem
 				if (t instanceof WallTile) {
 					// dlazdice typu zed
-					if (bird.collidesWhitRectangle(screenX, screenY, Tile.SIZE, Tile.SIZE)) {
-						gameOver = true;
+					if (chean) {
+						if (bird.collidesWhitRectangle(screenX, screenY, Tile.SIZE, Tile.SIZE)) {
+							gameOver = true;
+						}
 					}
 				}
 				if (t instanceof BonusTile) {
@@ -67,7 +69,7 @@ public class GameBoard implements TickAware {
 						((BonusTile) t).setIsActive(false);
 
 					}
-					if (shiftX % 200 == 0) {
+					if (shiftX % 800 == 0) {
 						((BonusTile) t).setIsActive(true);
 					}
 				}

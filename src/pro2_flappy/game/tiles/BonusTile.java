@@ -27,4 +27,12 @@ public class BonusTile extends AbstractTile {
 	public void setIsActive(boolean value) {
 		isActive = value;
 	}
+	
+	/*
+	 * Kopirovaci konstruktor
+	 */
+	public BonusTile(BonusTile original) {
+		super(original.image);
+		empty = original.empty;
+	}
 }

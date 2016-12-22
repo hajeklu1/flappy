@@ -55,12 +55,12 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 																				// pouzivame
 																				// u
 				// bonusu
-				
+
 				Tile referenceTile = tileTipes.get(referencedTiteTipe);
 				if (clazz.equals("Bird")) {
 					imgBird = loadImage(x, y, z, w, url);
 				} else {
-					Tile tile = createTile(clazz, x, y, z, w, url,referenceTile);
+					Tile tile = createTile(clazz, x, y, z, w, url, referenceTile);
 					tileTipes.put(tileTipe, tile);
 				}
 			}
@@ -69,7 +69,6 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 			int columns = Integer.parseInt(line[1]);
 			// vytvorime pole dlazdic odpovydajicich rozmeru
 			Tile[][] tiles = new Tile[rows][columns];
-			System.out.println(rows + "," + columns);
 			for (int i = 0; i < rows; i++) {
 				line = br.readLine().split(";");
 				for (int j = 0; j < columns; j++) {
@@ -82,7 +81,12 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 						cell = "";
 					}
 					// odpovidajici typ dlazdice hasMapy
-					tiles[i][j] = tileTipes.get(cell);
+					Tile t = tileTipes.get(cell);
+					if (t instanceof BonusTile) {
+						tiles[i][j] = new BonusTile((BonusTile)t);
+					} else {
+						tiles[i][j] = t;
+					}
 				}
 			}
 			GameBoard gb = new GameBoard(tiles, imgBird);
