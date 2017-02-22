@@ -26,7 +26,8 @@ public class MainWindow extends JFrame {
 
 	BoardPanel pnl = new BoardPanel();
 	GameBoard gameBoard;
-	long x = 0;
+	static long x = 0;
+
 	Timer t;
 
 	class BoardPanel extends JPanel {
@@ -50,7 +51,6 @@ public class MainWindow extends JFrame {
 			e1.printStackTrace();
 		}
 */
-		
 		LevelPicker picker = new LevelPicker();
 		gameBoard = picker.pickAndLoadLevel();
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -97,6 +97,7 @@ public class MainWindow extends JFrame {
 				}
 
 			}
+	
 		});
 
 		// z balicku Java.Swing - z dùvodu kompatibility se swing oknem
@@ -105,19 +106,29 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 				gameBoard.tick(x++);
+				gameBoard.setX(x);
 				pnl.repaint();
 			}
 		});
+	
 		t.start();
 
+	}
+	
+	public static void setX(long y){
+		x = y;
+		
+	}
+	public void endGame(){
+		
 	}
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
-			MainWindow mainWindow = new MainWindow();
+			MainWindow mainWindow;
+			mainWindow = new MainWindow();
 			mainWindow.setSize(860, 600);
 			mainWindow.setVisible(true);
-
 		});
 	}
 

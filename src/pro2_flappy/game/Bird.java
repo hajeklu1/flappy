@@ -67,5 +67,10 @@ public class Bird implements TickAware {
 		return birdBoundery.intersects(x, y, w, h);
 	}
 	
+	public void setDefauldPozicion(){
+		viewportX = 100;
+		viewportY = 200;
+	}
+	
 
 }
